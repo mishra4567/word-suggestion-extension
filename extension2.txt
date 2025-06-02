@@ -1,0 +1,135 @@
+const vscode = require("vscode");
+const fs = require("fs");
+const path = require("path");
+
+let cachedWords = new Map();
+let suggestionEnabled = true;
+
+// Recursively get all .txt files in the workspace
+function getTxtFilesRecursive(dir) {
+  let results = [];
+  const list = fs.readdirSync(dir);
+  list.forEach((file) => {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(getTxtFilesRecursive(fullPath));
+    } else if (file.endsWith(".txt")) {
+      results.push(fullPath);
+    }
+  });
+  return results;
+}
+
+// Read and collect words from .txt files, along with their source files
+function extractWordsFromFiles(files) {
+  const wordMap = new Map();
+
+  for (const file of files) {
+    try {
+      const content = fs.readFileSync(file, "utf8");
+      const words = content.match(/\b\w+\b/g);
+      if (words) {
+        words.forEach((word) => {
+          const lower = word.toLowerCase();
+          if (!wordMap.has(lower)) {
+            wordMap.set(lower, file); // Save word and its source file
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Error reading file:", file, err);
+    }
+  }
+
+  return wordMap;
+}
+
+// Update cache with words from .txt file contents
+function updateCache() {
+  const folders = vscode.workspace.workspaceFolders;
+  if (!folders) return;
+
+  try {
+    const workspaceFolder = folders[0].uri.fsPath;
+    const txtFiles = getTxtFilesRecursive(workspaceFolder);
+    cachedWords = extractWordsFromFiles(txtFiles); // Now a Map!
+    console.log(
+      "✅ Cached words from .txt content:",
+      Array.from(cachedWords.keys())
+    );
+  } catch (err) {
+    console.error("Error while updating word cache:", err);
+  }
+}
+
+function activate(context) {
+  updateCache();
+
+  // Toggle command
+  const toggleCommand = vscode.commands.registerCommand(
+    "word-suggestion.toggle",
+    () => {
+      suggestionEnabled = !suggestionEnabled;
+      vscode.window.showInformationMessage(
+        suggestionEnabled ? "✅ Suggestions enabled" : "❌ Suggestions disabled"
+      );
+    }
+  );
+
+  // Refresh cache command
+  const refreshCommand = vscode.commands.registerCommand(
+    "word-suggestion.refresh",
+    () => {
+      updateCache();
+      vscode.window.showInformationMessage("🔄 Word cache refreshed!");
+    }
+  );
+
+  // Completion provider
+  const provider = vscode.languages.registerCompletionItemProvider(
+    [
+      { scheme: "file", language: "javascript" },
+      { scheme: "file", language: "typescript" },
+      { scheme: "file", language: "html" },
+      { scheme: "file", language: "php" },
+      { scheme: "file", language: "python" },
+      { scheme: "file", language: "c" },
+      { scheme: "file", language: "cpp" },
+    ],
+    {
+      provideCompletionItems(document, position) {
+        if (!suggestionEnabled) return [];
+
+        const linePrefix = document
+          .lineAt(position)
+          .text.substring(0, position.character);
+        const currentWord = linePrefix.split(/\s+/).pop();
+
+        const suggestions = Array.from(cachedWords.entries())
+          .filter(([word]) => word.startsWith(currentWord.toLowerCase()))
+          .map(([word, file]) => {
+            const item = new vscode.CompletionItem(
+              word,
+              vscode.CompletionItemKind.Text
+            );
+            item.detail = `From ${path.basename(file)}`;
+            return item;
+          });
+
+        return suggestions;
+      },
+    },
+    "" // Trigger on any character
+  );
+
+  context.subscriptions.push(provider, toggleCommand, refreshCommand);
+  console.log("✅ Word Suggestion Extension Activated (with content reading)");
+}
+
+function deactivate() {}
+
+module.exports = {
+  activate,
+  deactivate,
+};

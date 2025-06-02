@@ -1,0 +1,61 @@
+const vscode = require("vscode");
+const fs = require("fs");
+const path = require("path");
+
+function activate(context) {
+  const provider = vscode.languages.registerCompletionItemProvider(
+    { scheme: "file" }, // Applies to files opened in editor
+    {
+      provideCompletionItems(document, position) {
+        // Get the word currently being typed
+        const linePrefix = document
+          .lineAt(position)
+          .text.substr(0, position.character);
+        const currentWord = linePrefix.split(/\s+/).pop(); // last word typed
+
+        // Get workspace folder
+        const folders = vscode.workspace.workspaceFolders;
+        if (!folders || folders.length === 0) {
+          console.log("No workspace folder open.");
+          return [];
+        }
+
+        const workspaceFolder = folders[0].uri.fsPath;
+
+        let suggestions = [];
+
+        try {
+          const files = fs.readdirSync(workspaceFolder);
+          const txtFiles = files.filter((file) => file.endsWith(".txt"));
+
+          suggestions = txtFiles
+            .map((file) => path.basename(file, ".txt"))
+            .filter((name) => name.startsWith(currentWord))
+            .map((name) => {
+              const item = new vscode.CompletionItem(
+                name,
+                vscode.CompletionItemKind.Text
+              );
+              item.detail = "Suggested from .txt filenames";
+              return item;
+            });
+        } catch (err) {
+          console.error("Error reading workspace folder files:", err);
+        }
+
+        return suggestions;
+      },
+    },
+    "" // Trigger on every keystroke
+  );
+
+  context.subscriptions.push(provider);
+  console.log("✅ Word Recommendation Extension Activated");
+}
+
+function deactivate() {}
+
+module.exports = {
+  activate,
+  deactivate,
+};

@@ -1,0 +1,42 @@
+{
+  "name": "woSuEx",
+  "displayName": "Word Suggestion Extension",
+  "description": "Suggests words from .txt files in workspace (with subfolder support, caching, and toggle) and (global support)",
+  "version": "1.0.0",
+  "publisher": "pomosweb",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "*",
+    "onCommand:word-suggestion.toggle",
+    "onCommand:word-suggestion.refresh"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "word-suggestion.toggle",
+        "title": "Toggle Word Suggestions"
+      },
+      {
+        "command": "word-suggestion.refresh",
+        "title": "Refresh Word Cache"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.99.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "eslint": "^9.23.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}

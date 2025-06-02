@@ -1,0 +1,24 @@
+# Node.js dependencies
+node_modules/
+
+# VS Code test binary + logs
+.vscode-test/
+.vscode-test.mjs
+
+# Build output
+*.vsix
+
+# Backup or temporary files
+backup/
+*.log
+*.tmp
+*.bak
+
+# Editor files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+coverage/
+test-results/

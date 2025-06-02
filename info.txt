@@ -1,0 +1,30 @@
+folder structure
+
+word-suggestion-extension/
+|───backup/
+|   ├── extension.js
+|   └── tracker.txt
+|node_modules/
+├── src/
+│   ├── cache.js
+│   ├── extension.js 
+│   ├── fileUtils.js
+│   ├── logger.js         (optional)
+│   ├── provider.js
+│   └── tracker.js
+├── test/
+|   └── extension.test.js 
+|── .gitignore
+|── .vscode-test.mjs
+|── .vscodeignore 
+|── CHANGELOG.md 
+|── eslint.config.mjs 
+|── extension1.txt 
+|── extension2.txt  
+|── info.txt  
+|── jsconfig.json  
+|── package-lock.json  
+├── package.json
+├── README.md
+├── vsc-extension-quickstart.md 
+└── woSuEx-1.0.0.vsix 
