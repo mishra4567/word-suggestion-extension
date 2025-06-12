@@ -1,0 +1,5 @@
+Tranking word and save word in "generate.txt" file 
+
+suggestion word from word "my-dictionary" folder's file's 
+
+can't track apper case latter and latter 
