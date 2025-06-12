@@ -9,10 +9,11 @@ function updateCache() {
 }
 
 function getSuggestions(prefix) {
+  const lowerPrefix = prefix.toLowerCase();
   return Array.from(cachedWords.entries())
-    .filter(([word]) => word.startsWith(prefix))
+    .filter(([word]) => word.toLowerCase().startsWith(lowerPrefix)) // ✅ Case-insensitive match
     .map(([word, file]) => ({
-      word,
+      word, // ✅ Keep original case
       file,
     }));
 }

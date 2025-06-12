@@ -4,8 +4,8 @@ const path = require("path");
 const generateFilePath = "C:\\Users\\prita\\my-dictionary\\generate.txt";
 
 // Store each word in same line (space separated)
-function storeWord(word) {
-  fs.appendFile(generateFilePath, word + " ", (err) => {
+function storeWord(lastWord) {
+  fs.appendFile(generateFilePath, lastWord + " ", (err) => {
     if (err) {
       console.error("❌ Error writing word:", err);
     }

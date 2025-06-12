@@ -6,7 +6,7 @@ node_modules/
 .vscode-test.mjs
 
 # Build output
-*.vsix
+
 
 # Backup or temporary files
 backup/

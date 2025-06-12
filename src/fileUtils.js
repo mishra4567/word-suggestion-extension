@@ -26,9 +26,13 @@ function extractWordsFromFiles(files) {
       const words = content.match(/\b\w+\b/g);
       if (words) {
         words.forEach((word) => {
-          const lower = word.toLowerCase();
-          if (!wordMap.has(lower)) {
-            wordMap.set(lower, file);
+          // Allow duplicates with different cases (e.g., "My" and "my")
+          if (
+            !Array.from(wordMap.keys()).some(
+              (w) => w.toLowerCase() === word.toLowerCase()
+            )
+          ) {
+            wordMap.set(word, file); // ✅ preserve original casing
           }
         });
       }

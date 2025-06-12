@@ -47,7 +47,7 @@ function activate(context) {
           // Debounce word saving
           clearTimeout(debounceTimer);
           debounceTimer = setTimeout(() => {
-            storeWord(lastWord.toLowerCase());
+            storeWord(lastWord);
           }, 300);
         }
       }

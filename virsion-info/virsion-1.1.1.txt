@@ -2,7 +2,6 @@ Tranking word and save word in "generate.txt" file
 
 suggestion word from word "my-dictionary" folder's file's 
 
-can't track apper case latter and latter 
+it track apper & lower case latter and latter 
 
-
-My Name is Pritam Mishra
+Inhensed Word Track And Inhensed Word Suggetion 
