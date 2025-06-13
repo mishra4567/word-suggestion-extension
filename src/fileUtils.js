@@ -19,28 +19,23 @@ function getTxtFilesRecursive(dir = TARGET_DIR) {
 }
 
 function extractWordsFromFiles(files) {
-  const wordMap = new Map();
+  const wordList = []; // ❌ Don't use Map
+
   for (const file of files) {
     try {
       const content = fs.readFileSync(file, "utf8");
       const words = content.match(/\b\w+\b/g);
       if (words) {
         words.forEach((word) => {
-          // Allow duplicates with different cases (e.g., "My" and "my")
-          if (
-            !Array.from(wordMap.keys()).some(
-              (w) => w.toLowerCase() === word.toLowerCase()
-            )
-          ) {
-            wordMap.set(word, file); // ✅ preserve original casing
-          }
+          wordList.push({ word, file }); // ✅ Store duplicates
         });
       }
     } catch (err) {
       console.error("Error reading file:", file, err);
     }
   }
-  return wordMap;
+
+  return wordList;
 }
 
 module.exports = {

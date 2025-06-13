@@ -1,0 +1,11 @@
+Tranking word and save word in "generate.txt" file 
+
+suggestion word from word "my-dictionary" folder's file's 
+
+it track apper & lower case latter and latter 
+
+Inhensed Word Track And Inhensed Word Suggetion 
+
+Adding Duplicated word to suggetion multiple word 
+
+To show suggestions only when the user has typed at least 3 characters

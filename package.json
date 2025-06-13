@@ -2,7 +2,7 @@
   "name": "woSuEx",
   "displayName": "Word Suggestion Extension",
   "description": "Suggests words from .txt files in workspace (with subfolder support, caching, and toggle) and (global support)",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "pomosweb",
   "engines": {
     "vscode": "^1.99.0"

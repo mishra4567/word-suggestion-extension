@@ -1,5 +1,5 @@
 const vscode = require("vscode");
-const path =require("path")
+const path = require("path");
 const { getSuggestions } = require("./cache");
 
 const alphabet = [..."abcdefghijklmnopqrstuvwxyz"];
@@ -28,7 +28,12 @@ function createProvider(suggestionEnabledRef) {
         const linePrefix = document
           .lineAt(position)
           .text.substring(0, position.character);
-        const currentWord = linePrefix.split(/\s+/).pop()?.toLowerCase() || "";
+        const currentWord = linePrefix.split(/\s+/).pop() || "";
+
+        // ✅ Only show suggestions if word has at least 3 characters
+        if (currentWord.length < 3) {
+          return [];
+        }
 
         return getSuggestions(currentWord).map(({ word, file }) => {
           const item = new vscode.CompletionItem(
